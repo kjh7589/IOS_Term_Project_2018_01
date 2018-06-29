@@ -59,7 +59,25 @@ class DetailViewController: UIViewController, UITableViewDelegate, UITableViewDa
             cell.configure(location: local1)
             return cell
         }
-    } 
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let indexPath = tableView.indexPathForSelectedRow
+        
+        let currentCell = tableView.cellForRow(at: indexPath!)! as UITableViewCell
+        
+        
+        let currentItem = currentCell.textLabel!.text
+        
+        let alertController = UIAlertController(title: "", message: "" + currentItem!, preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "확인", style: .default){(myAction: UIAlertAction) -> Void in
+        
+        }
+        alertController.addAction(okAction)
+        
+        present(alertController, animated: true, completion: nil)
+    }
+
 
     //
     // MARK: - Navigation
