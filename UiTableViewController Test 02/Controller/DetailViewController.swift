@@ -60,14 +60,13 @@ class DetailViewController: UIViewController, UITableViewDelegate, UITableViewDa
             return cell
         }
     }
-    
+    //테이블뷰에 액션을 주기위해 쓰인 함수
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let indexPath = tableView.indexPathForSelectedRow
+        let indexPath = tableView.indexPathForSelectedRow//테이블뷰 선택된 열을 순차적으로 indexPath변수에 넣어준다
         
         let currentCell = tableView.cellForRow(at: indexPath!)! as UITableViewCell
         
-        
-        let currentItem = currentCell.textLabel!.text
+        let currentItem = currentCell.textLabel!.text//현재 셀의 라베을 받아온다
         
         let alertController = UIAlertController(title: "", message: "" + currentItem!, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "확인", style: .default){(myAction: UIAlertAction) -> Void in
