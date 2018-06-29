@@ -1,6 +1,21 @@
 import UIKit
 
-class MyTableViewController: UITableViewController {
+enum selectedScope:Int {
+    case Ename = 0
+    case Emenu = 1
+    case Etype = 2
+}
+
+var myIndex = 0
+
+
+class MyTableViewController:  UITableViewController, UISearchBarDelegate {
+    let initialDataAry:[FoodStore] = FoodStore.generateModelArray()
+    var dataAry:[FoodStore] = FoodStore.generateModelArray()
+    
+    var filteredData = [String]()
+    
+    var isSearching = false
     
     /*
     var foodStoreNames = ["늘해랑", "번개반점", "아딸", "왕짜장", "토마토 도시락", "홍콩반점"]
@@ -47,6 +62,50 @@ class MyTableViewController: UITableViewController {
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
         
         self.title = "DIT 배달통"
+         self.searchBarSetup()
+    }
+    
+    func searchBarSetup() {
+        let searchBar = UISearchBar(frame: CGRect(x:0,y:0,width:(UIScreen.main.bounds.width),height:70))
+        searchBar.showsScopeBar = true
+        searchBar.selectedScopeButtonIndex = 0
+        searchBar.delegate = self
+        searchBar.returnKeyType = UIReturnKeyType.done
+        self.tableView.tableHeaderView = searchBar
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchText.isEmpty {
+            dataAry = initialDataAry
+            self.tableView.reloadData()
+        }else {
+            filterTableView(ind: searchBar.selectedScopeButtonIndex, text: searchText)
+        }
+    }
+    
+    func filterTableView(ind:Int,text:String) {
+        switch ind {
+        case selectedScope.Ename.rawValue:
+            //fix of not searching when backspacing
+            dataAry = initialDataAry.filter({ (mod) -> Bool in
+                return mod.name.lowercased().contains(text.lowercased())
+            })
+            self.tableView.reloadData()
+        case selectedScope.Emenu.rawValue:
+            //fix of not searching when backspacing
+            dataAry = initialDataAry.filter({ (mod) -> Bool in
+                return mod.menu.lowercased().contains(text.lowercased())
+            })
+            self.tableView.reloadData()
+        case selectedScope.Etype.rawValue:
+            //fix of not searching when backspacing
+            dataAry = initialDataAry.filter({ (mod) -> Bool in
+                return mod.type.lowercased().contains(text.lowercased())
+            })
+            self.tableView.reloadData()
+        default:
+            print("no type")
+        }
     }
     
     // MARK: - Table view data source
@@ -58,8 +117,14 @@ class MyTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         //return foodStoreNames.count
-        return foodStores.count
+        
+        if isSearching {
+            return filteredData.count
+        }
+        
+        return dataAry.count
     }
+    
     
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
